@@ -29,7 +29,6 @@ import com.esi.sba.powersh.ui.theme.PowerSHTheme
 fun RoundedSearchBar(
     modifier: Modifier = Modifier,
     value: String,
-    label: String,
     onDoneActionClick: () -> Unit = {},
     onClearClick: () -> Unit = {},
     onFocusChanged: (FocusState) -> Unit = {},
@@ -59,7 +58,7 @@ fun RoundedSearchBar(
         },
         textStyle = MaterialTheme.typography.subtitle1,
         singleLine = true,
-        trailingIcon = {
+        leadingIcon = {
             IconButton(onClick = { onClearClick() }) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "Clear")
             }
