@@ -38,6 +38,11 @@ fun NavGraph(
 
         }
         composable(MainDestinations.MAIN_PAGE) {
+            BackHandler {
+                finishActivity()
+            }
+
+
 
 
         }
