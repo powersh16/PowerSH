@@ -1,20 +1,18 @@
 package com.esi.sba.powersh.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -29,39 +27,43 @@ import com.esi.sba.powersh.ui.theme.PowerSHTheme
 fun RoundedSearchBar(
     modifier: Modifier = Modifier,
     value: String,
-    label: String,
+    label: String = "Search",
     onDoneActionClick: () -> Unit = {},
     onClearClick: () -> Unit = {},
     onFocusChanged: (FocusState) -> Unit = {},
-  //  onValueChanged: (String) -> Unit
+    //  onValueChanged: (String) -> Unit
 ) {
 
 
-
-   TextField(
+    TextField(
         modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth(1f)
-            .onFocusChanged { onFocusChanged(it)}
+            .onFocusChanged { onFocusChanged(it) }
 
-       .background(shape = CircleShape, color = Color.Transparent),
-       colors = TextFieldDefaults.textFieldColors(
-           textColor = Color.Gray,
-           disabledTextColor = Color.Transparent,
-           focusedIndicatorColor = Color.Transparent,
-           unfocusedIndicatorColor = Color.Transparent,
-           disabledIndicatorColor = Color.Transparent
-       ),
-       shape = CircleShape,
-       value = value,
+            .background(shape = CircleShape, color = Color.Transparent),
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color.Gray,
+            disabledTextColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        shape = CircleShape,
+        value = value,
         onValueChange = { query ->
-         //   onValueChanged(query)
+            //   onValueChanged(query)
         },
+        label = { Text(
+            color = Color.Gray ,
+            text = label
+        ) },
         textStyle = MaterialTheme.typography.subtitle1,
         singleLine = true,
-        trailingIcon = {
+        leadingIcon = {
             IconButton(onClick = { onClearClick() }) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "Clear")
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Clear"
+                )
             }
         },
         keyboardActions = KeyboardActions(onDone = { onDoneActionClick() }),
@@ -77,19 +79,21 @@ fun RoundedSearchBar(
 
 @Preview
 @Composable
-fun SearchPreview(){
+fun SearchPreview() {
 
-    PowerSHTheme() {
-        Box(modifier = Modifier.fillMaxSize().background(Color.White)){
+    PowerSHTheme {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)) {
 
             RoundedSearchBar(
-                modifier= Modifier,
-            value= "Text",
-            label=  "label",
-            onDoneActionClick=  {},
-            onClearClick=  {},
-            onFocusChanged = {},
-           // onValueChanged= (String) -> Unit
+                modifier = Modifier,
+                value = "Text",
+                label = "Search",
+                onDoneActionClick = {},
+                onClearClick = {},
+                onFocusChanged = {},
+                // onValueChanged= (String) -> Unit
             )
 
         }
