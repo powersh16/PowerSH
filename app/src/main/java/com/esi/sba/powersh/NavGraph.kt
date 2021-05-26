@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.esi.sba.powersh.screens.mainScreen
 import com.esi.sba.powersh.screens.splashScreen
 
 
@@ -42,7 +43,7 @@ fun NavGraph(
                 finishActivity()
             }
 
-
+            mainScreen(navController)
 
 
         }
