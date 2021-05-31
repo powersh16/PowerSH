@@ -17,12 +17,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.esi.sba.powersh.R
 import com.esi.sba.powersh.model.DataProvider
 import com.esi.sba.powersh.model.product
+import com.esi.sba.powersh.ui.theme.CardCover
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 
@@ -33,24 +37,30 @@ fun listProducts(modifier: Modifier){
 
     val products = remember { DataProvider.productList }
 
-/*
 
     LazyVerticalGrid(
         cells = GridCells.Fixed(2),
-        modifier = Modifier.padding(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
+        modifier = Modifier.padding(start = 16.dp, end =16.dp),
+        contentPadding =  PaddingValues(
+            top = 8.dp,
+            bottom = 8.dp
+        )
     ) {
         itemsIndexed(products) { row, item->
             productItem(item)
             Spacer(modifier = Modifier.padding(8.dp))
         }
     }
-*/
 
+
+/*
 
     LazyColumn (
         modifier = Modifier,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(
+            top = 8.dp,
+            bottom = 8.dp
+            )
     ){
 
         itemsIndexed(products) { index, row ->
@@ -58,6 +68,7 @@ fun listProducts(modifier: Modifier){
 
         }
     }
+*/
 
 
 }
@@ -71,31 +82,35 @@ fun productItem(
 ){
     
     Card(shape = RoundedCornerShape(8.dp),
-        backgroundColor = MaterialTheme.colors.surface,
+        backgroundColor = Color.White,
         modifier = Modifier
-            .padding(end = 8.dp)
+            .padding(8.dp)
     ) {
 
         Column(
             modifier = Modifier
-                .padding(end = 16.dp),
+                .padding(bottom = 16.dp),
 
         ){
             Image(painter = painterResource(
                 id = product.puppyImageId ),
                 contentDescription = "Shoes",
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
+                    .padding(1.dp)
                     .fillMaxWidth()
-                    .height(260.dp)
+                    .height(160.dp)
+
                     .align(CenterHorizontally)
             )
             Text(text = product.title,
                 color = Color.Black,
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp)
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                 )
             Text(text = product.price,
                 color = PowerSHRed,
-                modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
             )
         }
 

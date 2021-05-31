@@ -1,81 +1,132 @@
 package com.esi.sba.powersh.screens
 
-import android.text.Layout
+import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.components.*
-import com.esi.sba.powersh.ui.theme.PowerSHRed
+import com.esi.sba.powersh.ui.theme.CardCover
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
+import kotlinx.coroutines.launch
 
 
+@ExperimentalComposeUiApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun mainScreen(navController: NavController) {
-    val valueofSearshbar by remember {
+    val valueofSearshbar = remember {
         mutableStateOf("")
     }
+
+
+    val scaffoldState = rememberScaffoldState(
+        rememberDrawerState(DrawerValue.Closed)
+    )
+
+    val selectedItem = remember { mutableStateOf("HOME")}
+
+
+    val scope = rememberCoroutineScope()
+
+
     Scaffold(
-        Modifier.fillMaxSize(),
+        scaffoldState = scaffoldState,
+        modifier = Modifier.fillMaxSize(),
         topBar = {
-            mainTopBar()
-        }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                RoundedSearchBar(
-                    modifier = Modifier
-                        .weight(1f),
-                    value = valueofSearshbar,
-                    label = "Search"
-                )
-                IconButton(
-                    modifier = Modifier.align(CenterVertically)
-                        .padding(start = 8.dp)
-                        .background(PowerSHRed,shape = RoundedCornerShape(8.dp)),
+            mainTopBar(
+                onOpenMenu = {
+                    scope.launch {
+                        if (scaffoldState.drawerState.isOpen)
+                        scaffoldState.drawerState.close()
+                        else scaffoldState.drawerState.open()
+                    }
+                    Log.d("DrawerDrawing","onOpenMenu")
 
-                    onClick = {}
-                ) {
-                    Icon(
-                        modifier = Modifier.align(CenterVertically),
-                        tint = Color.White,
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Stings button"
-                    )
                 }
-            }
-            TabsPanel(screenState = ScreenState())
-            listProducts(modifier = Modifier.align(CenterHorizontally))
+            )
+        },
+
+        drawerContent = {
+
+            mainDrawer(
+                navController=  navController,
+                scope = scope,
+                selectedScreen = selectedItem,
+                scaffoldState =scaffoldState
+                )
+
+        },
+    ) {
+
+        if (
+            selectedItem.value.equals("HOME")
+        ){
+            mainScreen(
+                valueofSearshbar = valueofSearshbar
+            )
+        }else if (
+            selectedItem.value.equals("CART")
+        ) {
+            cartScreen(navController = navController)
+        }else {
+
+            Text(text = selectedItem.value,
+            color = Color.Black
+            )
+
 
         }
+
+
 
     }
 
 }
 
+
+
+
+@ExperimentalComposeUiApi
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun mainScreen(
+    valueofSearshbar : MutableState<String>
+){
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = CardCover)
+        ,
+    ) {
+        RoundedSearchBar(
+            modifier = Modifier
+                .weight(1f),
+            value = valueofSearshbar.value,
+            label = "Search",
+            onValueChanged = {
+
+            }
+        )
+
+        TabsPanel(screenState = ScreenState())
+        listProducts(modifier = Modifier.align(CenterHorizontally))
+
+    }
+
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Composable
 fun MainPreview() {

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
+import com.esi.sba.powersh.MainDestinations
 import com.esi.sba.powersh.MainDestinations.MAIN_PAGE
 import com.esi.sba.powersh.R
 import com.esi.sba.powersh.ui.theme.PowerSHRed
@@ -31,7 +33,7 @@ import kotlinx.coroutines.launch
 fun splashScreen(navController: NavController) {
 
 
-
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -61,10 +63,10 @@ fun splashScreen(navController: NavController) {
 
 
 
-    GlobalScope.launch(Dispatchers.Main) {
-        delay(5000)
+    coroutineScope.launch {
+        delay(500)
         navController.popBackStack()
-        navController.navigate(MAIN_PAGE)
+        navController.navigate(MainDestinations.INFO_PAGE_ONE)
     }
 
 }

@@ -18,7 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
+import com.esi.sba.powersh.MainDestinations
 import com.esi.sba.powersh.R
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
@@ -79,7 +81,7 @@ fun infoScreenOne(navController: NavController) {
                     .padding(start = 0.dp,end=2.dp)
                     .align(CenterVertically)
                     .height(8.dp)
-                    .width(22.dp),
+                    .width(16.dp),
                 onClick = { /*TODO*/ }) {
                 Spacer(modifier = Modifier.size(4.dp))
             }
@@ -116,7 +118,7 @@ fun infoScreenOne(navController: NavController) {
                 shape = CircleShape,
                 modifier= Modifier.background(color = PowerSHRed, shape = CircleShape),
                 onClick = {
-
+                    navController.navigate(MainDestinations.INFO_PAGE_TWO)
             }) {
                Text(
                    text = "Next",
@@ -211,7 +213,7 @@ fun infoScreenTwo(navController: NavController) {
                     .padding(start = 0.dp,end=2.dp)
                     .align(CenterVertically)
                     .height(8.dp)
-                    .width(22.dp),
+                    .width(16.dp),
                 onClick = { /*TODO*/ }) {
                 Spacer(modifier = Modifier.size(4.dp))
             }
@@ -237,6 +239,7 @@ fun infoScreenTwo(navController: NavController) {
                 shape = CircleShape,
                 modifier= Modifier.background(color = PowerSHRed, shape = CircleShape),
                 onClick = {
+                    navController.navigate(MainDestinations.INFO_PAGE_THREE)
 
                 }) {
                 Text(
@@ -332,7 +335,7 @@ fun infoScreenThree(navController: NavController) {
                     .padding(start = 0.dp,end=2.dp)
                     .align(CenterVertically)
                     .height(8.dp)
-                    .width(22.dp),
+                    .width(16.dp),
                 onClick = { /*TODO*/ }) {
                 Spacer(modifier = Modifier.size(4.dp))
             }
@@ -347,13 +350,13 @@ fun infoScreenThree(navController: NavController) {
                 shape = CircleShape,
                 modifier= Modifier.background(color = PowerSHRed, shape = CircleShape),
                 onClick = {
-
+                    navController.navigate(MainDestinations.MAIN_PAGE)
                 }) {
                 Text(
                     text = "Get Started",
                     textAlign = TextAlign.Center,
                     color = Color.White,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp)
                 )
             }
         }

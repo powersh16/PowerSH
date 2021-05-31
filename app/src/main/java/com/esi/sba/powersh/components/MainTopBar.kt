@@ -30,7 +30,9 @@ fun mainTopBar(
         },
         modifier = Modifier.fillMaxWidth(),
         navigationIcon = {
-            IconButton(onClick = { onOpenMenu() }) {
+            IconButton(onClick = {
+                onOpenMenu()
+            }) {
                 Icon(
                     tint = Color.Black,
                     imageVector = Icons.Filled.Menu,

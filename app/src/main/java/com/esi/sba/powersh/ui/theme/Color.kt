@@ -9,3 +9,7 @@ val Teal200 = Color(0xFF03DAC5)
 
 
 val PowerSHRed = Color(0xffcf4a4b)
+
+val CardCover = Color(0x19F7EDED)
+
+val CardCoverPink = Color(0x5CDAF0FC)
