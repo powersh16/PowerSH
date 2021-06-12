@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.MainDestinations
 import com.esi.sba.powersh.MainDestinations.MAIN_PAGE
@@ -28,6 +27,38 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+
+
+
+@Composable
+fun newSlashScreen(){
+
+    Box(modifier =Modifier
+        .fillMaxSize()
+        .background(color = Color.Red)
+    ){
+
+        Image(painter = painterResource(id = R.drawable.powersh_without_background),
+            contentDescription ="image" ,
+        modifier = Modifier.align(Center))
+
+
+        Text(text = "Hello Android",
+            modifier = Modifier.align(BottomCenter),
+        )
+
+    }
+
+
+
+}
+
+
+
+
+
+
 
 @Composable
 fun splashScreen(navController: NavController) {
@@ -60,6 +91,9 @@ fun splashScreen(navController: NavController) {
         )
 
     }
+
+
+
 
 
 

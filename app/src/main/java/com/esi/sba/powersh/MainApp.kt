@@ -1,5 +1,6 @@
 package com.esi.sba.powersh
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.primarySurface
@@ -10,9 +11,11 @@ import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainApp(finishActivity: () -> Unit) {
     PowerSHTheme {
+
         val navController = rememberNavController()
         Scaffold(
             backgroundColor = MaterialTheme.colors.primarySurface,

@@ -5,31 +5,31 @@ import com.esi.sba.powersh.R
 object DataProvider {
 
     val productList = listOf(
-        product(
+        Product(
             id = 1,
             title = "Basket",
             price = "7000 DA",
             puppyImageId = R.drawable.basket
         ),
-        product(
+        Product(
             id = 2,
             title = "Running",
             price = "6000 DA",
             puppyImageId = R.drawable.running2
         ),
-        product(
+        Product(
             id = 3,
             title = "Swazilla",
             price = "8000 DA",
             puppyImageId = R.drawable.swazila
         ),
-        product(
+        Product(
             id = 4,
             title = "versac",
             price = "4000 DA",
             puppyImageId = R.drawable.versac2
         ),
-        product(
+        Product(
             id = 5,
             title = "Weird",
             price = "3000 DA",
@@ -81,5 +81,54 @@ object DataProvider {
 
 
 
+
+    val cartList = mutableListOf<CardItem>(
+
+    CardItem(
+        quantity = 1,
+        color = "White",
+        size = 38,
+            id = 1,
+            title = "Basket",
+            price = 7000,
+            ImageId = R.drawable.basket
+        ),
+        CardItem(
+            quantity = 2,
+            color = "Blue",
+            size = 37,
+            id = 2,
+            title = "Running",
+            price = 6000,
+            ImageId = R.drawable.running2
+        ),
+        CardItem(
+            quantity = 2,
+            color = "Black",
+            size = 41,
+            id = 3,
+            title = "Swazilla",
+            price = 8000,
+            ImageId = R.drawable.swazila
+        ),
+        CardItem(
+            quantity = 1,
+            color = "Blue",
+            size = 39,
+            id = 4,
+            title = "versac",
+            price = 4000,
+            ImageId = R.drawable.versac2
+        ),
+        CardItem(
+            quantity = 1,
+            color = "Brown",
+            size = 42,
+            id = 5,
+            title = "Weird",
+            price = 3000,
+            ImageId = R.drawable.weird2
+        ),
+    )
 
 }

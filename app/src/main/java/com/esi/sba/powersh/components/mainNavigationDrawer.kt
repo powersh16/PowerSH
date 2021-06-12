@@ -4,26 +4,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.MainDestinations
 import com.esi.sba.powersh.R
@@ -49,13 +44,15 @@ private val screens = listOf(
 
 
 
+@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun mainDrawer(
     navController: NavController,
     modifier: Modifier = Modifier,
     scope: CoroutineScope,
     selectedScreen: MutableState<String>,
-    scaffoldState: ScaffoldState,
+    scaffoldState: BottomSheetScaffoldState,
 ) {
     Column(
         modifier
@@ -119,11 +116,11 @@ fun mainDrawer(
         ) {
 
             DrawerRow(
-                title=  "Home",
+                title =  "Home",
                 icon = Icons.Outlined.Home,
-                id=  "HOME",
+                id =  "HOME",
                 scope = scope,
-                selectedScreen= selectedScreen,
+                selectedScreen = selectedScreen,
                 scaffoldState = scaffoldState,
             )
 
@@ -131,11 +128,11 @@ fun mainDrawer(
 
         Spacer(modifier = Modifier.padding(8.dp))
             DrawerRow(
-                title=  "Cart",
+                title =  "Cart",
                 icon = Icons.Outlined.ShoppingCart,
-                id=  "CART",
+                id =  "CART",
                 scope = scope,
-                selectedScreen= selectedScreen,
+                selectedScreen = selectedScreen,
                 scaffoldState = scaffoldState,
             )
 
@@ -143,50 +140,50 @@ fun mainDrawer(
 
             Spacer(modifier = Modifier.padding(8.dp))
         DrawerRow(
-            title=  "Favourite",
+            title =  "Favourite",
             icon = Icons.Outlined.FavoriteBorder,
-            id=  "FAVOURITE",
+            id =  "FAVOURITE",
             scope = scope,
-            selectedScreen= selectedScreen,
+            selectedScreen = selectedScreen,
             scaffoldState = scaffoldState,
         )
 
         Spacer(modifier = Modifier.padding(8.dp))
         DrawerRow(
-            title=  "Orders",
+            title =  "Orders",
             icon = Icons.Outlined.LocalShipping,
-            id=  "ORDERS",
+            id =  "ORDERS",
             scope = scope,
-            selectedScreen= selectedScreen,
+            selectedScreen = selectedScreen,
             scaffoldState = scaffoldState,
         )
         Spacer(modifier = Modifier.padding(8.dp))
         DrawerRow(
-            title=  "Settings",
+            title =  "Settings",
             icon = Icons.Outlined.Settings,
-            id=  "SETTINGS",
+            id =  "SETTINGS",
             scope = scope,
-            selectedScreen= selectedScreen,
+            selectedScreen = selectedScreen,
             scaffoldState = scaffoldState,
         )
         Spacer(modifier = Modifier.padding(8.dp))
         DrawerRow(
-            title=  "About Us",
+            title =  "About Us",
             icon = Icons.Outlined.Info,
-            id=  "ABOUT",
+            id =  "ABOUT",
             scope = scope,
-            selectedScreen= selectedScreen,
+            selectedScreen = selectedScreen,
             scaffoldState = scaffoldState,
         )
 
 
         Spacer(modifier = Modifier.padding(8.dp))
         DrawerRow(
-            title=  "Contact Us",
+            title =  "Contact Us",
             icon = Icons.Outlined.MailOutline,
-            id=  "CONTACT",
+            id =  "CONTACT",
             scope = scope,
-            selectedScreen= selectedScreen,
+            selectedScreen = selectedScreen,
             scaffoldState = scaffoldState,
         )
 
@@ -195,15 +192,16 @@ fun mainDrawer(
 }
 
 
+@ExperimentalMaterialApi
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun DrawerRow(
     title: String,
-    icon : ImageVector,
+    icon: ImageVector,
     id: String,
     scope: CoroutineScope,
     selectedScreen: MutableState<String>,
-    scaffoldState: ScaffoldState,
+    scaffoldState: BottomSheetScaffoldState,
 ){
     Row(modifier = Modifier
         .clickable {
@@ -241,14 +239,16 @@ fun DrawerRow(
 
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun drawerPreview() {
 
     val navController = rememberNavController()
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        drawerState= rememberDrawerState(DrawerValue.Closed),
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
 
-    val scaffoldState = rememberScaffoldState(
-        rememberDrawerState(DrawerValue.Closed)
     )
 
     val selectedItem = remember { mutableStateOf("HOME") }

@@ -8,24 +8,28 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.MainDestinations
 import com.esi.sba.powersh.R
+import com.esi.sba.powersh.components.DotsIndicator
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun infoScreenOne(navController: NavController) {
 
@@ -69,7 +73,7 @@ fun infoScreenOne(navController: NavController) {
                     .align(Alignment.CenterHorizontally)
             )
         Spacer(modifier = Modifier.weight(1f))
-
+     //   DotsIndicator()
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -78,7 +82,7 @@ fun infoScreenOne(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 0.dp,end=2.dp)
+                    .padding(start = 0.dp, end = 2.dp)
                     .align(CenterVertically)
                     .height(8.dp)
                     .width(16.dp),
@@ -90,7 +94,7 @@ fun infoScreenOne(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 2.dp,end=2.dp)
+                    .padding(start = 2.dp, end = 2.dp)
                     .align(CenterVertically)
                     .size(8.dp),
                 onClick = { /*TODO*/ }) {
@@ -101,7 +105,7 @@ fun infoScreenOne(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 2.dp,end=2.dp)
+                    .padding(start = 2.dp, end = 2.dp)
                     .align(CenterVertically)
                     .size(8.dp),
                 onClick = { /*TODO*/ }) {
@@ -199,7 +203,7 @@ fun infoScreenTwo(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 2.dp,end=2.dp)
+                    .padding(start = 2.dp, end = 2.dp)
                     .align(CenterVertically)
                     .size(8.dp),
                 onClick = { /*TODO*/ }) {
@@ -210,7 +214,7 @@ fun infoScreenTwo(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 0.dp,end=2.dp)
+                    .padding(start = 0.dp, end = 2.dp)
                     .align(CenterVertically)
                     .height(8.dp)
                     .width(16.dp),
@@ -222,7 +226,7 @@ fun infoScreenTwo(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 2.dp,end=2.dp)
+                    .padding(start = 2.dp, end = 2.dp)
                     .align(CenterVertically)
                     .size(8.dp),
                 onClick = { /*TODO*/ }) {
@@ -309,7 +313,7 @@ fun infoScreenThree(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 2.dp,end=2.dp)
+                    .padding(start = 2.dp, end = 2.dp)
                     .align(CenterVertically)
                     .size(8.dp),
                 onClick = { /*TODO*/ }) {
@@ -321,7 +325,7 @@ fun infoScreenThree(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 2.dp,end=2.dp)
+                    .padding(start = 2.dp, end = 2.dp)
                     .align(CenterVertically)
                     .size(8.dp),
                 onClick = { /*TODO*/ }) {
@@ -332,7 +336,7 @@ fun infoScreenThree(navController: NavController) {
                 backgroundColor = PowerSHRed,
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(start = 0.dp,end=2.dp)
+                    .padding(start = 0.dp, end = 2.dp)
                     .align(CenterVertically)
                     .height(8.dp)
                     .width(16.dp),

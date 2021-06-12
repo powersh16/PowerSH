@@ -9,24 +9,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillNode
-import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.isFocused
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalAutofill
-import androidx.compose.ui.platform.LocalAutofillTree
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -36,11 +26,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.PopupProperties
 import com.esi.sba.powersh.R
 import com.esi.sba.powersh.model.AutoCompleteBox
 import com.esi.sba.powersh.model.asAutoCompleteEntities
 import com.esi.sba.powersh.ui.theme.CardCoverPink
+import com.esi.sba.powersh.ui.theme.MainCardList
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 import java.util.*
@@ -61,11 +51,12 @@ fun RoundedSearchBar(
 ) {
 
     var queryState by remember {
-        mutableStateOf(TextFieldValue(
-            text =""
-        ))
+        mutableStateOf(
+            TextFieldValue(
+                text = ""
+            )
+        )
     }
-
 
 
     val names = listOf(
@@ -82,22 +73,6 @@ fun RoundedSearchBar(
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @ExperimentalAnimationApi
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview
@@ -105,9 +80,11 @@ fun RoundedSearchBar(
 fun SearchPreview() {
 
     PowerSHTheme {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
 
             RoundedSearchBar(
                 modifier = Modifier,
@@ -116,7 +93,7 @@ fun SearchPreview() {
                 onDoneActionClick = {},
                 onClearClick = {},
                 onFocusChanged = {},
-                onValueChanged= {}
+                onValueChanged = {}
             )
 
         }
@@ -145,15 +122,17 @@ fun AutoCompleteValueSample(items: List<String>) {
     ) {
 
         var queryState by remember {
-            mutableStateOf(TextFieldValue(
-                text =""
-            ))
+            mutableStateOf(
+                TextFieldValue(
+                    text = ""
+                )
+            )
         }
 
         val view = LocalView.current
 
         onItemSelected { item ->
-            queryState =TextFieldValue( item.value)
+            queryState = TextFieldValue(item.value)
             filter(queryState.text)
             view.clearFocus()
         }
@@ -171,7 +150,7 @@ fun AutoCompleteValueSample(items: List<String>) {
 
                 },
 
-                label ={
+                label = {
                     Text(
                         text = queryState.text,
                         color = Color.DarkGray,
@@ -197,9 +176,11 @@ fun AutoCompleteValueSample(items: List<String>) {
                     keyboardType = KeyboardType.Text
                 ),
                 leadingIcon = {
-                    IconButton(onClick = {  queryState = TextFieldValue("")
+                    IconButton(onClick = {
+                        queryState = TextFieldValue("")
                         filter(queryState.text)
-                        view.clearFocus() }) {
+                        view.clearFocus()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = "Clear"
@@ -209,23 +190,26 @@ fun AutoCompleteValueSample(items: List<String>) {
                 modifier = Modifier
                     .weight(1f)
                     .onFocusChanged {
-                        isSearching = it == FocusState.Active
+                        isSearching = it.isFocused
+
+                        //  isSearching = it == FocusState.Active
                     }
-                    .background(shape = CircleShape, color = CardCoverPink)
-                    .height(42.dp)
-                ,
+                    .background(shape = CircleShape, color = MainCardList)
+                    .height(42.dp),
             )
             IconButton(
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
                     .padding(start = 8.dp)
                     .size(36.dp)
-                    .background(PowerSHRed,shape = RoundedCornerShape(8.dp)),
+                    .background(PowerSHRed, shape = RoundedCornerShape(8.dp)),
 
                 onClick = {}
             ) {
                 Icon(
                     modifier =
-                    Modifier.align(Alignment.CenterVertically)
+                    Modifier
+                        .align(Alignment.CenterVertically)
                         .size(24.dp),
                     tint = Color.White,
                     painter = painterResource(id = R.drawable.ic_filter),
@@ -244,7 +228,8 @@ fun ValueAutoCompleteItem(item: String) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(text = item,
+        Text(
+            text = item,
             style = MaterialTheme.typography.subtitle2,
             color = Color.Black
         )

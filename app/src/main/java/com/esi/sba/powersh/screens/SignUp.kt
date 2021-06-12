@@ -1,10 +1,7 @@
 package com.esi.sba.powersh.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,7 +28,6 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.isFocused
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -109,15 +105,15 @@ fun mainCard(
 fun LoginScreen(
     modifier: Modifier,
     visibility: Boolean,
-    bottomSheetScaffoldState: BottomSheetScaffoldState
+    bottomSheetScaffoldState: ModalBottomSheetState
 ){
 
 
     AnimatedVisibility(
         modifier = Modifier,
         visible = visibility,
-        enter = fadeIn(initialAlpha = 0F, animationSpec = tween(300)),
-        exit = fadeOut(targetAlpha = 0F, animationSpec = tween(300))
+        enter = slideInHorizontally(initialOffsetX = { it },  animationSpec = tween(400)) ,
+        exit = slideOutHorizontally(targetOffsetX = { it },  animationSpec = tween(400))
     ) {
 
 
@@ -202,10 +198,10 @@ fun LoginScreen(
             if (isForgetButtonPressed) {
                 coroutineScope.launch {
 
-                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
+                    if (!bottomSheetScaffoldState.isVisible) {
+                        bottomSheetScaffoldState.show()
                     } else {
-                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                        bottomSheetScaffoldState.hide()
                     }
 
 
@@ -275,8 +271,8 @@ fun signUpScreen(
     AnimatedVisibility(
         modifier = Modifier,
         visible = visibility,
-        enter = fadeIn(initialAlpha = 0F, animationSpec = tween(300)),
-        exit = fadeOut(targetAlpha = 0F, animationSpec = tween(300))
+        enter = slideInHorizontally(initialOffsetX = { it },  animationSpec = tween(400)) ,
+        exit = slideOutHorizontally(targetOffsetX = { it },  animationSpec = tween(400))
     ) {
 
 
@@ -634,80 +630,96 @@ fun passwordCustomTextField(
 }
 
 
+@ExperimentalMaterialApi
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun forgetPasswordBottomSheet(){
-
-    var emailState = remember {
-        mutableStateOf(TextFieldValue(""))
-    }
-
-    val mEmailRequester = remember { FocusRequester() }
+fun forgetPasswordBottomSheet(bottomSheetScaffoldState: ModalBottomSheetState) {
 
 
-    val view = LocalView.current
-
-Column(
-    modifier =Modifier
-) {
-
-
-    Text(
-        text = "Reset Password",
-        fontWeight = FontWeight.Bold,
-        fontSize =20.sp,
-        color = Color.Black,
-        modifier = Modifier.padding(start = 16.dp, top = 36.dp, bottom = 16.dp)
-    )
-
-    customTextField(
-        modifier = Modifier.fillMaxWidth(),
-        textFieldModifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 24.dp, end = 24.dp),
-        title = "Email Address",
-        icon = Icons.Outlined.Email,
-        fieldState = emailState,
-        focusRequester = mEmailRequester,
-        autofillType = AutofillType.EmailAddress,
-        keyboardType = KeyboardType.Email,
-        imeAction = ImeAction.Done,
-        onDone = {
-            view.clearFocus()
-        }
-    )
-
-
-
-    Button(
-        colors = ButtonDefaults.buttonColors(
-            contentColor = Color.White,
-            backgroundColor = PowerSHRed,
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetScaffoldState,
+        sheetShape = RoundedCornerShape(
+            topStart = 16.dp,
+            topEnd = 16.dp
         ),
-        shape = RoundedCornerShape(18.dp),
-        modifier = Modifier
-            .padding(start = 24.dp, end = 24.dp, bottom = 64.dp, top= 16.dp)
-            .fillMaxWidth()
-            .align(CenterHorizontally)
-            .background(color = PowerSHRed, shape = RoundedCornerShape(18.dp)),
-        onClick = {
+        sheetContent = {
+
+            val emailState = remember {
+                mutableStateOf(TextFieldValue(""))
+            }
+
+            val mEmailRequester = remember { FocusRequester() }
+
+            val view = LocalView.current
+
+            Column(
+                modifier =Modifier
+            ) {
+
+
+                Text(
+                    text = "Reset Password",
+                    fontWeight = FontWeight.Bold,
+                    fontSize =20.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(start = 16.dp, top = 36.dp, bottom = 16.dp)
+                )
+
+                customTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    textFieldModifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 24.dp, end = 24.dp),
+                    title = "Email Address",
+                    icon = Icons.Outlined.Email,
+                    fieldState = emailState,
+                    focusRequester = mEmailRequester,
+                    autofillType = AutofillType.EmailAddress,
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done,
+                    onDone = {
+                        view.clearFocus()
+                    }
+                )
+
+
+
+
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = Color.White,
+                        backgroundColor = PowerSHRed,
+                    ),
+                    shape = RoundedCornerShape(18.dp),
+                    modifier = Modifier
+                        .padding(start = 24.dp, end = 24.dp, bottom = 64.dp, top = 16.dp)
+                        .fillMaxWidth()
+                        .align(CenterHorizontally)
+                        .background(color = PowerSHRed, shape = RoundedCornerShape(18.dp)),
+                    onClick = {
+
+                    }) {
+                    Text(
+                        text = "Login",
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        modifier = Modifier.padding(
+                            start = 24.dp,
+                            end = 24.dp,
+                            top = 6.dp,
+                            bottom = 6.dp
+                        )
+                    )
+                }
+
+
+            }
 
         }) {
-        Text(
-            text = "Login",
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier.padding(
-                start = 24.dp,
-                end = 24.dp,
-                top = 6.dp,
-                bottom = 6.dp
-            )
-        )
+
     }
 
 
-}
 
 }
 
@@ -722,37 +734,29 @@ fun authentificationScreen(
 ){
 
 
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    )
+    val bottomSheetScaffoldState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        sheetContent ={
-            forgetPasswordBottomSheet()
-        } ,
-        sheetPeekHeight = 0.dp,
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            mainCard(
-                tabState  = tabState,
-            )
-        },
-
     ) {
+      Column(modifier = Modifier.fillMaxSize()) {
+          mainCard(
+              tabState  = tabState,
+          )
+          LoginScreen(
+              bottomSheetScaffoldState =bottomSheetScaffoldState,
+              visibility = (tabState.value == 0),
+              modifier =  Modifier
+          )
 
-            LoginScreen(
-                bottomSheetScaffoldState =bottomSheetScaffoldState,
-                visibility = (tabState.value == 0),
-                modifier =  Modifier
-            )
-
-            signUpScreen(
-                visibility = (tabState.value == 1),
-                        modifier =  Modifier
-            )
+          signUpScreen(
+              visibility = (tabState.value == 1),
+              modifier =  Modifier
+          )
 
 
+      }
+        forgetPasswordBottomSheet(bottomSheetScaffoldState = bottomSheetScaffoldState)
 
 
     }
