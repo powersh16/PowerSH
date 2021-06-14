@@ -1,5 +1,6 @@
 package com.esi.sba.powersh.screens
 
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -47,10 +48,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.esi.sba.powersh.R
+import com.esi.sba.powersh.components.Indicators
 import com.esi.sba.powersh.components.LoginState
+import com.esi.sba.powersh.components.extensions.DessertCard
+import com.esi.sba.powersh.components.extensions.IndicatorState
+import com.esi.sba.powersh.components.indicator.OnboardingPage
+import com.esi.sba.powersh.components.indicator.Pager
+import com.esi.sba.powersh.components.indicator.PagerState
 import com.esi.sba.powersh.components.loginTabs
 import com.esi.sba.powersh.ui.theme.CardCoverPink
 import com.esi.sba.powersh.ui.theme.PowerSHRed
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 
@@ -104,19 +114,8 @@ fun mainCard(
 @Composable
 fun LoginScreen(
     modifier: Modifier,
-    visibility: Boolean,
     bottomSheetScaffoldState: ModalBottomSheetState
 ){
-
-
-    AnimatedVisibility(
-        modifier = Modifier,
-        visible = visibility,
-        enter = slideInHorizontally(initialOffsetX = { it },  animationSpec = tween(400)) ,
-        exit = slideOutHorizontally(targetOffsetX = { it },  animationSpec = tween(400))
-    ) {
-
-
         var emailState = remember {
             mutableStateOf(TextFieldValue(""))
         }
@@ -252,7 +251,6 @@ fun LoginScreen(
 
         }
 
-    }
 }
 
 
@@ -265,16 +263,7 @@ fun LoginScreen(
 @Composable
 fun signUpScreen(
     modifier: Modifier,
-    visibility: Boolean
 ){
-
-    AnimatedVisibility(
-        modifier = Modifier,
-        visible = visibility,
-        enter = slideInHorizontally(initialOffsetX = { it },  animationSpec = tween(400)) ,
-        exit = slideOutHorizontally(targetOffsetX = { it },  animationSpec = tween(400))
-    ) {
-
 
         var emailState = remember {
             mutableStateOf(TextFieldValue(""))
@@ -445,7 +434,6 @@ fun signUpScreen(
 
         }
 
-    }
 }
 
 
@@ -692,7 +680,7 @@ fun forgetPasswordBottomSheet(bottomSheetScaffoldState: ModalBottomSheetState) {
                     ),
                     shape = RoundedCornerShape(18.dp),
                     modifier = Modifier
-                        .padding(start = 24.dp, end = 24.dp, bottom = 64.dp, top = 16.dp)
+                        .padding(start = 24.dp, end = 24.dp, bottom = 56.dp, top = 24.dp)
                         .fillMaxWidth()
                         .align(CenterHorizontally)
                         .background(color = PowerSHRed, shape = RoundedCornerShape(18.dp)),
@@ -700,7 +688,7 @@ fun forgetPasswordBottomSheet(bottomSheetScaffoldState: ModalBottomSheetState) {
 
                     }) {
                     Text(
-                        text = "Login",
+                        text = "Reset",
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         modifier = Modifier.padding(
@@ -726,6 +714,7 @@ fun forgetPasswordBottomSheet(bottomSheetScaffoldState: ModalBottomSheetState) {
 
 
 
+@ExperimentalPagerApi
 @ExperimentalMaterialApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -736,6 +725,13 @@ fun authentificationScreen(
 
     val bottomSheetScaffoldState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
+    val pagerState = rememberPagerState(pageCount = 2)
+
+    var scope = rememberCoroutineScope()
+    val dotSettings =
+        IndicatorState.DotSettings(size = 2, radius = 7.6f, color = PowerSHRed)
+    val state = remember { IndicatorState(scope, dotSettings) }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -743,16 +739,39 @@ fun authentificationScreen(
           mainCard(
               tabState  = tabState,
           )
-          LoginScreen(
-              bottomSheetScaffoldState =bottomSheetScaffoldState,
-              visibility = (tabState.value == 0),
-              modifier =  Modifier
+
+          HorizontalPager(
+              state = pagerState,
+              itemSpacing = 8.dp,
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(0.dp, 0.dp)
+          ) { page ->
+
+              if (page == 0){
+                  LoginScreen(
+                      bottomSheetScaffoldState =bottomSheetScaffoldState,
+                      modifier =  Modifier
+                  )
+              }else{
+                  signUpScreen(
+                      modifier =  Modifier
+                  )
+
+              }
+
+          }
+
+
+          Indicators(
+              state,
+              pagerState,
+              Modifier
+                  .fillMaxWidth()
           )
 
-          signUpScreen(
-              visibility = (tabState.value == 1),
-              modifier =  Modifier
-          )
+          tabState.value = if ( state.currentPosition == 0) 1 else 0
+
 
 
       }
@@ -810,6 +829,7 @@ fun Modifier.autofill(
 
 
 
+@ExperimentalPagerApi
 @OptIn(ExperimentalMaterialApi::class)
 @Preview(showBackground = true)
 @Composable

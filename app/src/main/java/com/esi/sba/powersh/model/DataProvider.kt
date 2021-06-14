@@ -1,39 +1,40 @@
 package com.esi.sba.powersh.model
 
+import androidx.compose.runtime.mutableStateListOf
 import com.esi.sba.powersh.R
 
 object DataProvider {
 
     val productList = listOf(
         Product(
-            id = 1,
+            id = 0,
             title = "Basket",
-            price = "7000 DA",
-            puppyImageId = R.drawable.basket
+            price = 7000,
+            ImageId = R.drawable.basket
+        ),
+        Product(
+            id = 1,
+            title = "Running",
+            price = 6000,
+            ImageId = R.drawable.running2
         ),
         Product(
             id = 2,
-            title = "Running",
-            price = "6000 DA",
-            puppyImageId = R.drawable.running2
+            title = "Swazilla",
+            price = 8000,
+            ImageId = R.drawable.swazila
         ),
         Product(
             id = 3,
-            title = "Swazilla",
-            price = "8000 DA",
-            puppyImageId = R.drawable.swazila
+            title = "versac",
+            price = 4000,
+            ImageId = R.drawable.versac2
         ),
         Product(
             id = 4,
-            title = "versac",
-            price = "4000 DA",
-            puppyImageId = R.drawable.versac2
-        ),
-        Product(
-            id = 5,
             title = "Weird",
-            price = "3000 DA",
-            puppyImageId = R.drawable.weird2
+            price = 3000,
+            ImageId = R.drawable.weird2
         ),
       /*  product(
             id = 6,
@@ -82,7 +83,7 @@ object DataProvider {
 
 
 
-    val cartList = mutableListOf<CardItem>(
+    val cartList = mutableStateListOf<CardItem>(
 
     CardItem(
         quantity = 1,

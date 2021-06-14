@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -28,13 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.esi.sba.powersh.MainDestinations
+import com.esi.sba.powersh.R
 import com.esi.sba.powersh.components.*
+import com.esi.sba.powersh.components.extensions.*
+import com.esi.sba.powersh.model.CardItem
 import com.esi.sba.powersh.model.DataProvider
+import com.esi.sba.powersh.model.Product
 import com.esi.sba.powersh.ui.theme.CardCoverPink
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.gowtham.ratingbar.RatingBar
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
@@ -45,8 +50,25 @@ fun detailScreen(
     navController: NavController,
     isDetailScreenVisible: MutableState<Boolean>,
     bottomSheetStat: BottomSheetScaffoldState,
-    pageState: MutableState<String>
-){
+    pageState: MutableState<String>,
+    cartProduct: MutableList<CardItem>,
+    selectedProduct: MutableState<Int>,
+    restoreValues: MutableState<Boolean>,
+    ){
+
+
+
+
+    var value: Float by rememberSaveable { mutableStateOf(3.2f) }  //initial rating value is 3.2 here
+
+
+
+
+
+
+
+
+
 
   val favourite = remember {
       mutableStateOf(false)
@@ -74,12 +96,13 @@ fun detailScreen(
         mutableStateOf("Black")
     }
 
+    var imagesList = remember { productList0 }
 
     val isSizeDialogVisible = remember {
         mutableStateOf(false)
     }
     val sizeSelected = remember {
-        mutableStateOf("40")
+        mutableStateOf(40)
     }
 
     val widthImage = remember {
@@ -87,11 +110,80 @@ fun detailScreen(
     }
 
 
-    val products = remember { DataProvider.productList }
+    if(restoreValues.value){
+        isAddedToCart.value = false
+        favourite.value = false
+        quantity.value = 1
+        colorSelected.value = "Black"
+        sizeSelected.value = 40
+    }
+
+
+    var product by remember {
+        mutableStateOf(
+            Product(
+                id = 3,
+                title = "Swazilla",
+                price = 8000,
+                ImageId = R.drawable.swazila
+            )
+        )
+    }
+
+        if (selectedProduct.value == 0) {
+            imagesList = productList0
+            product = Product(
+                id = 0,
+                title = "Basket",
+                price = 7000,
+                ImageId = R.drawable.basket
+            )
 
 
 
-    //  val coroutineScope = rememberCoroutineScope()
+
+        } else if (selectedProduct.value == 1){
+            imagesList = productList1
+
+                product = Product(
+                    id = 1,
+                    title = "Running",
+                    price = 6000,
+                    ImageId = R.drawable.running2
+                )
+
+
+
+            }else if (selectedProduct.value == 2){
+            imagesList = productList2
+                product = Product(
+                    id = 2,
+                    title = "Swazilla",
+                    price = 8000,
+                    ImageId = R.drawable.swazila
+                )
+            }else if (selectedProduct.value == 3){
+            imagesList = productList3
+
+            product = Product(
+                    id = 3,
+                    title = "Versac",
+                    price = 4000,
+                    ImageId = R.drawable.versac2
+                )
+            }else if (selectedProduct.value == 4){
+            imagesList = productList4
+
+            product = Product(
+                    id = 4,
+                    title = "Weird",
+                    price = 3000,
+                    ImageId = R.drawable.weird2
+                )
+            }
+
+
+            //  val coroutineScope = rememberCoroutineScope()
     AnimatedVisibility(
         visible = true,
        enter =  fadeIn(initialAlpha = 0F, animationSpec = tween(200)),
@@ -101,14 +193,6 @@ fun detailScreen(
         Scaffold{
 
             val coroutineScope = rememberCoroutineScope()
-
-
-
-
-
-
-
-
 
 
                 Column(
@@ -128,8 +212,16 @@ fun detailScreen(
                     ) {
 
 
-                        DotsIndicator()
+                        DotsIndicator(
+                            list = imagesList
+                        )
 
+
+                     /*   RatingBar(value = value){
+                            value=it
+                            Log.d("Akramous", "onRatingChanged: $it")
+                        }
+*/
                         Icon(imageVector = Icons.Outlined.Close,
                             contentDescription = "Back arrow",
                             tint = PowerSHRed.copy(alpha = 0.8f),
@@ -194,7 +286,7 @@ fun detailScreen(
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Start,
-                            text = "Nike Air Max Pro",
+                            text = product.title,
                             modifier = Modifier
                                 .padding(top = 16.dp, start = 16.dp, end = 8.dp)
                         )
@@ -215,7 +307,7 @@ fun detailScreen(
                             fontWeight = FontWeight.Normal,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Start,
-                            text = "Nike Air Max is a line of shoes produced by Nike, Inc., with the first model released in 1987. Air Max shoes are identified by their midsoles incorporating flexible urethane pouches filled with pressurized gas",
+                            text = "${product.title} is a line of shoes produced by Nike, Inc., with the first model released in 1987. Air Max shoes are identified by their midsoles incorporating flexible urethane pouches filled with pressurized gas",
                             modifier = Modifier
                                 .padding(top = 8.dp, start = 16.dp, end = 8.dp)
                         )
@@ -263,9 +355,40 @@ fun detailScreen(
 
 
                         payment(
+                            price = product.price,
                             quantity = quantity,
-                            isAddedToCart = isAddedToCart
-                        )
+                            isAddedToCart = isAddedToCart,
+                            cartProduct = cartProduct,
+                            onIncrementQuantity = {
+                                // quantity.value += 1
+                                cartProduct.add(
+                                    CardItem(
+                                        id = 1,
+                                        title = product.title,
+                                        price = product.price,
+                                        quantity = quantity.value,
+                                        ImageId = product.ImageId,
+                                        color = colorSelected.value,
+                                        size = sizeSelected.value
+                                    )
+                                )
+                            },
+                        ) {
+
+                            cartProduct.remove(
+                                CardItem(
+                                    id = 1,
+                                    title = product.title,
+                                    price = product.price,
+                                    quantity = quantity.value,
+                                    ImageId = product.ImageId,
+                                    color = colorSelected.value,
+                                    size = sizeSelected.value
+                                )
+                            )
+
+                            //  quantity.value -= 1
+                        }
 
                     }
 
@@ -304,8 +427,13 @@ fun detailScreen(
 
 @Composable
 fun payment(
+    price: Int,
     quantity: MutableState<Int>,
     isAddedToCart: MutableState<Boolean>,
+    cartProduct: MutableList<CardItem>,
+    onIncrementQuantity: () -> Unit,
+    onDecrementQuantity: () -> Unit,
+
     ){
 
 
@@ -323,7 +451,7 @@ fun payment(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 fontSize = 22.sp,
-                text = "${quantity.value * 8000} DA",
+                text = "${quantity.value * price} DA",
                 modifier = Modifier
                     .align(alignment = CenterVertically)
             )
@@ -336,10 +464,12 @@ fun payment(
             modifier = Modifier.align(CenterVertically),
             isAddedToCart = isAddedToCart,
             onIncrementQuantity = {
-                quantity.value += 1
+               // quantity.value += 1
+                onIncrementQuantity()
                                   },
             onDecrementQuantity = {
-                quantity.value -= 1
+                onDecrementQuantity()
+              //  quantity.value -= 1
             },
         )
 
@@ -358,7 +488,7 @@ fun features(
     isColorDialogVisible: MutableState<Boolean>,
     colorSelected: MutableState<String>,
     isSizeDialogVisible: MutableState<Boolean>,
-    sizeSelected: MutableState<String>,
+    sizeSelected: MutableState<Int>,
     isAddedToCart: MutableState<Boolean>,
 ){
 
@@ -616,12 +746,24 @@ fun detailPreview() {
     )
 
     val pageState = remember { mutableStateOf("CART") }
+    val selectedProduct = remember { mutableStateOf(0) }
+    val cartProduct = remember { DataProvider.cartList }
+    val restoreValues = remember { mutableStateOf(false) }
+
 
     val navController = rememberNavController()
     val isDetailScreenVisible = remember {
         mutableStateOf(true)
     }
     PowerSHTheme {
-        detailScreen(navController, isDetailScreenVisible, bottomSheetStat, pageState)
+        detailScreen(
+            navController,
+            isDetailScreenVisible,
+            bottomSheetStat,
+            pageState,
+            cartProduct,
+            selectedProduct,
+            restoreValues
+        )
     }
 }

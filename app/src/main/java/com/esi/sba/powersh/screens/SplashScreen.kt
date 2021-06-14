@@ -100,7 +100,7 @@ fun splashScreen(navController: NavController) {
     coroutineScope.launch {
         delay(500)
         navController.popBackStack()
-        navController.navigate(MainDestinations.INFO_PAGE_ONE)
+        navController.navigate(MainDestinations.ONBOARDING)
     }
 
 }

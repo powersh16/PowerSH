@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -16,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.components.*
+import com.esi.sba.powersh.model.CardItem
+import com.esi.sba.powersh.model.DataProvider
 import com.esi.sba.powersh.ui.theme.CardCover
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -30,13 +33,12 @@ import kotlinx.coroutines.launch
 fun mainScreen(
     navController: NavController,
     pageState: MutableState<String>,
-    scaffoldState: BottomSheetScaffoldState
+    scaffoldState: BottomSheetScaffoldState,
+    cartProduct: SnapshotStateList<CardItem>
 ) {
     val valueofSearshbar = remember {
         mutableStateOf("")
     }
-
-
 
 
     val isDetailScreenVisible = remember {
@@ -44,9 +46,20 @@ fun mainScreen(
 }
 
 
+    val restoreValues = remember {
+        mutableStateOf(false)
+    }
+
+
+    val selectedProduct = remember {
+        mutableStateOf(0)
+    }
+
+
     //  val selectedItem = remember { mutableStateOf("HOME")}
 
 
+  //  val cartProduct = remember { DataProvider.cartList }
 
 
     val scope = rememberCoroutineScope()
@@ -76,7 +89,15 @@ fun mainScreen(
             },
         sheetContent = {
 
-            detailScreen(navController, isDetailScreenVisible, bottomSheetStat = scaffoldState, pageState = pageState)
+            detailScreen(
+                navController,
+                isDetailScreenVisible,
+                bottomSheetStat = scaffoldState,
+                pageState = pageState,
+                cartProduct = cartProduct,
+                selectedProduct = selectedProduct,
+                restoreValues = restoreValues
+            )
 
         },
             drawerContent = {
@@ -97,23 +118,24 @@ fun mainScreen(
                 mainScreen(
                     navController = navController,
                     valueofSearshbar = valueofSearshbar,
-                    bottomSheetStat = scaffoldState
+                    bottomSheetStat = scaffoldState,
+                    selectedProduct = selectedProduct,
+                    restoreValues = restoreValues
                 )
             } else if (
                 pageState.value.equals("CART")
             ) {
-                cartScreen(navController = navController)
+                cartScreen(
+                    navController = navController,
+                    cartProduct= cartProduct
+                    )
             } else {
-
                 Text(
                     text = pageState.value,
                     color = Color.Black
                 )
 
-
             }
-
-
         }
 }
 
@@ -128,6 +150,8 @@ fun mainScreen(
     valueofSearshbar: MutableState<String>,
     navController: NavController,
     bottomSheetStat: BottomSheetScaffoldState,
+    selectedProduct: MutableState<Int>,
+    restoreValues: MutableState<Boolean>,
     ){
 
 
@@ -155,7 +179,14 @@ fun mainScreen(
          )
 
          TabsPanel(screenState = ScreenState())
-         listProducts(navController = navController ,modifier = Modifier.align(CenterHorizontally), bottomSheetStat = bottomSheetStat)
+         listProducts(navController = navController ,
+             modifier = Modifier.align(CenterHorizontally),
+             bottomSheetStat = bottomSheetStat,
+             selectedProduct =selectedProduct,
+             onProductClicked ={
+                 restoreValues.value = true
+             }
+             )
 
      }
 
@@ -168,6 +199,8 @@ fun mainScreen(
 @Composable
 fun MainPreview() {
 
+    val cartProduct = remember { DataProvider.cartList }
+
     val scaffoldState = rememberBottomSheetScaffoldState(
         drawerState= rememberDrawerState(DrawerValue.Closed),
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -176,7 +209,7 @@ fun MainPreview() {
     val navController = rememberNavController()
     val pageState = remember { mutableStateOf("HOME") }
     PowerSHTheme {
-        mainScreen(navController, pageState, scaffoldState)
+        mainScreen(navController, pageState, scaffoldState, cartProduct)
     }
 
 

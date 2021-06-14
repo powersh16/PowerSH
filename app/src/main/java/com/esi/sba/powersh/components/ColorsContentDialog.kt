@@ -61,7 +61,7 @@ fun colorGridItem(
 fun sizeGridItem(
     id: String?,
     size: Dp = 45.dp,
-    onSelected: (String) -> Unit
+    onSelected: (Int) -> Unit
 ) {
     sizeIdFor(id)?.let {
 
@@ -75,10 +75,10 @@ fun sizeGridItem(
                 .border(width = 2.dp, color = CardCoverPink, shape  = CircleShape)
                 .size(size)
             ,
-            onClick = {  id?.let(onSelected)  },
+            onClick = {  onSelected(it)},
         ) {
           Text(
-              text = it,
+              text = it.toString(),
               color = Color.DarkGray,
               fontStyle = FontStyle.Normal,
               fontWeight = FontWeight.SemiBold,

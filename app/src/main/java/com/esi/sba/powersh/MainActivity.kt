@@ -13,8 +13,10 @@ import com.esi.sba.powersh.screens.newSlashScreen
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 import com.esi.sba.powersh.ui.theme.RedDark
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,6 +31,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@OptIn(ExperimentalPagerApi::class)
 @Preview
 @Composable
 fun splashPreview1(){

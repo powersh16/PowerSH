@@ -4,13 +4,17 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.esi.sba.powersh.components.indicator.OnboardingScreen
+import com.esi.sba.powersh.model.CardItem
 import com.esi.sba.powersh.screens.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
@@ -31,6 +35,9 @@ object MainDestinations {
     const val INFO_PAGE_TWO = "info_page_two"
     const val INFO_PAGE_THREE = "info_page_three"
 
+
+    const val ONBOARDING = "onboarding"
+
 }
 
 @ExperimentalPagerApi
@@ -41,19 +48,30 @@ fun NavGraph(
     finishActivity: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
     startDestination: String = MainDestinations.SPLASH_SCREE,
+    cartProduct: SnapshotStateList<CardItem>,
 ) {
-
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
 
-        composable(MainDestinations.SPLASH_SCREE) {
 
+
+
+
+
+
+        composable(MainDestinations.ONBOARDING) {
+            OnboardingScreen(context = LocalContext.current) {
+                navController.navigate(route = MainDestinations.MAIN_PAGE)
+            }
+        }
+
+
+        composable(MainDestinations.SPLASH_SCREE) {
             BackHandler {
                 finishActivity()
             }
-
             splashScreen(navController)
         }
 
@@ -74,11 +92,12 @@ fun NavGraph(
 
         composable(MainDestinations.CART_PAGE) {
 
+
             BackHandler {
                 navController.navigate(MainDestinations.MAIN_PAGE)
             }
 
-            cartScreen(navController = navController)
+            cartScreen(navController = navController, cartProduct = cartProduct )
         }
 
 
@@ -118,7 +137,8 @@ fun NavGraph(
             mainScreen(
                 navController,
                 pageState = pageState,
-                scaffoldState = scaffoldState
+                scaffoldState = scaffoldState,
+                cartProduct = cartProduct
             )
 
         }

@@ -74,7 +74,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:1.0.0-beta08"
 
 
-    implementation "androidx.navigation:navigation-compose:2.4.0-alpha01"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha02"
 
 
     implementation 'androidx.palette:palette-ktx:1.0.0'
@@ -89,6 +89,9 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.0.0-beta08'
 
 
+    implementation 'com.github.a914-gowtham:compose-ratingbar:1.0.63'
+
+    implementation "com.airbnb.android:lottie-compose:1.0.0-beta07-1"
 
 
     //Accompanist
@@ -96,6 +99,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-pager:0.11.1"
     implementation "com.google.accompanist:accompanist-coil:0.11.1"
 
+    implementation 'androidx.constraintlayout:constraintlayout-compose:1.0.0-alpha07'
 
 
 }

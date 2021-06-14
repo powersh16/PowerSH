@@ -83,8 +83,13 @@ fun QuantityToggle(
         ,
         onClick = {
             Log.d("", "OnClick")
-           // if (!isAddedToCart.value) isAddedToCart.value else onDecrementQuantity()
             isAddedToCart.value = !isAddedToCart.value
+            if (isAddedToCart.value) {
+                onIncrementQuantity()
+            } else {
+                onDecrementQuantity()
+            }
+
         }) {
 
 
@@ -194,7 +199,7 @@ fun ColorContentDialog(
 @Composable
 fun sizeContentDialog(
     visible: MutableState<Boolean>,
-    onSizeSelected: (String) -> Unit
+    onSizeSelected: (Int) -> Unit
 ) {
 
     AnimatedVisibility(

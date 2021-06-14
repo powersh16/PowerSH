@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.esi.sba.powersh.components.extensions.*
+import com.esi.sba.powersh.model.Product
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -17,9 +18,8 @@ import com.google.accompanist.pager.rememberPagerState
 
 @ExperimentalPagerApi
 @Composable
-fun DotsIndicator() {
+fun DotsIndicator(list: MutableList<Product>) {
     var scope = rememberCoroutineScope()
-    val list = remember { productList2 }
     val dotSettings =
         IndicatorState.DotSettings(size = list.size, radius = 7.6f, color = PowerSHRed)
     val pagerState = rememberPagerState(pageCount = list.size)
@@ -41,13 +41,15 @@ fun DotsIndicator() {
             DessertCard(mproduct = list[page])
         }
 
-        Indicators(
-            state,
-            pagerState,
-            Modifier
-                .fillMaxWidth()
-                .padding(0.dp,top = 0.dp, 0.dp, 0.dp)
-        )
+        if (list.size > 1) {
+            Indicators(
+                state,
+                pagerState,
+                Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, top = 0.dp, 0.dp, 0.dp)
+            )
+        }
     }
 }
 

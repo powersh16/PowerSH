@@ -7,11 +7,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -39,12 +41,10 @@ import com.esi.sba.powersh.ui.theme.PowerSHTheme
 fun cartListProducts(
     navController: NavController,
     modifier: Modifier = Modifier,
-    cartProduct: List<CardItem>,
+    cartProduct: MutableList<CardItem>,
+    onRemoveItem: (Int) -> Unit
 
     ) {
-
-
- //   val cartProduct = remember { DataProvider.cartList }
 
 
     LazyColumn (
@@ -56,7 +56,9 @@ fun cartListProducts(
     ){
 
         itemsIndexed(cartProduct) { index, row ->
-            cardItem(row)
+            cardItem(row){
+                onRemoveItem(index)
+            }
             Spacer(modifier = Modifier.padding(4.dp))
 
         }
@@ -70,6 +72,7 @@ fun cartListProducts(
 @Composable
 fun cardItem(
     item: CardItem,
+    onRemove : () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -134,7 +137,7 @@ fun cardItem(
                     modifier = Modifier
                         .padding(start = 4.dp, end = 4.dp)
                         .align(CenterVertically)
-                        .fillMaxWidth()
+                        .weight(1f)
                         .fillMaxHeight()
                 ) {
                     Text(
@@ -165,6 +168,27 @@ fun cardItem(
                 }
 
 
+                IconButton(
+                    onClick = {
+                    Log.d("akramakramakram","IconButton clicked")
+                        onRemove()
+                },
+
+                    modifier = Modifier
+                        .background(shape = CircleShape, color = Color.Transparent)
+                        .align(CenterVertically)
+                    ) {
+                   Icon(
+                       imageVector = Icons.Outlined.DeleteForever,
+                       contentDescription = "Remove item",
+                        tint =  Color.LightGray,
+                        modifier = Modifier
+                            .size(24.dp)
+                      // .padding(start = 24.dp, end = 24.dp)
+                       .align(CenterVertically)
+                   )
+                }
+
 
 
             }
@@ -193,7 +217,8 @@ fun cardItem(
 @Preview
 @Composable
 fun cardProductPreview() {
-    val cartProduct = remember { DataProvider.cartList }
+    val cartProduct = remember { mutableListOf<CardItem>() }
+    cartProduct.addAll( DataProvider.cartList)
     val navController: NavHostController = rememberNavController()
     PowerSHTheme {
         Box(
@@ -206,7 +231,9 @@ fun cardProductPreview() {
                 navController,
                 Modifier,
                 cartProduct
-            )
+            ){
+                // nothing
+            }
 
 
         }

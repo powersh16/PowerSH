@@ -27,7 +27,6 @@ import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.model.DataProvider
 import com.esi.sba.powersh.model.Product
 import com.esi.sba.powersh.ui.theme.CardCoverPink
-import com.esi.sba.powersh.ui.theme.MainCardList
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 import kotlinx.coroutines.launch
@@ -39,7 +38,9 @@ import kotlinx.coroutines.launch
 fun listProducts(
     navController: NavController,
     modifier: Modifier,
-    bottomSheetStat: BottomSheetScaffoldState
+    bottomSheetStat: BottomSheetScaffoldState,
+    selectedProduct: MutableState<Int>,
+    onProductClicked: (Int) -> Unit
 ) {
 
 
@@ -55,7 +56,14 @@ fun listProducts(
         )
     ) {
         itemsIndexed(products) { row, item ->
-            productItem(navController, item, bottomSheetStat = bottomSheetStat)
+            productItem(
+                navController,
+                item,
+                bottomSheetStat = bottomSheetStat,
+                selectedProduct= selectedProduct
+            ){
+                onProductClicked(it)
+            }
             Spacer(modifier = Modifier.padding(8.dp))
         }
     }
@@ -86,7 +94,9 @@ fun listProducts(
 fun productItem(
     navController: NavController,
     product: Product,
-    bottomSheetStat: BottomSheetScaffoldState
+    bottomSheetStat: BottomSheetScaffoldState,
+    selectedProduct: MutableState<Int>,
+    onProductClicked: (Int) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -94,7 +104,7 @@ fun productItem(
         backgroundColor = Color.White,
         modifier = Modifier
             .padding(8.dp)
-            .clickable {
+          /*  .clickable {
                 Log.d("productItemClick", "Clicked")
                 //   navController.navigate(MainDestinations.DETAIL_PAGE)
 
@@ -102,7 +112,7 @@ fun productItem(
                     bottomSheetStat.bottomSheetState.expand()
                 }
 
-            }
+            }*/
     ) {
 
         Column(
@@ -114,6 +124,9 @@ fun productItem(
                     coroutineScope.launch {
                         bottomSheetStat.bottomSheetState.expand()
                     }
+
+                    selectedProduct.value = product.id
+                    onProductClicked(product.id)
 
                 }
             ,
@@ -133,7 +146,7 @@ fun productItem(
 
                 Image(
                     painter = painterResource(
-                        id = product.puppyImageId
+                        id = product.ImageId
                     ),
                     contentDescription = "Shoes",
                     contentScale = ContentScale.FillBounds,
@@ -175,7 +188,7 @@ fun productItem(
                 modifier = Modifier.padding(start = 8.dp, top = 4.dp)
             )
             Text(
-                text = product.price,
+                text = product.price.toString(),
                 color = PowerSHRed,
                 modifier = Modifier.padding(start = 8.dp, top = 4.dp)
             )
@@ -222,7 +235,7 @@ fun detailProductImagesList(
 
                 Image(
                     painter = painterResource(
-                        id = row.puppyImageId
+                        id = row.ImageId
                     ),
                     contentDescription = "Shoes Detail",
                     contentScale = ContentScale.FillBounds,

@@ -3,8 +3,8 @@ package com.esi.sba.powersh.model
 data class Product(
     val id: Int,
     val title: String,
-    val price:String,
-    val puppyImageId: Int = 0
+    val price:Int,
+    val ImageId: Int = 0
 )
 
 
