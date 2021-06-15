@@ -19,3 +19,9 @@ data class CardItem(
     val ImageId: Int = 0
 )
 
+
+data class Step(
+    val title: String,
+)
+
+

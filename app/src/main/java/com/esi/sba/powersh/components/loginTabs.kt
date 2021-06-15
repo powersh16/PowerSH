@@ -24,6 +24,9 @@ import com.esi.sba.powersh.ui.theme.CardCover
 import com.esi.sba.powersh.ui.theme.CardCoverPink
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 
 data class LoginState(var state: Screen = Screen.LOGIN) {
 
@@ -35,11 +38,13 @@ data class LoginState(var state: Screen = Screen.LOGIN) {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun loginTabs(
-    selectedScreen : MutableState<Int>,
     screenState: LoginState,
     modifier: Modifier,
+    pagerState: PagerState,
+    onPageSelected : (Int) -> Unit
 ) {
     val (selectedTab, setSelectedTab) = remember {
         mutableStateOf(
@@ -51,7 +56,12 @@ fun loginTabs(
 
     TabRow(
         modifier= modifier,
-        selectedTabIndex = selectedTab,
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        },
         backgroundColor =PowerSHRed,
         contentColor = CardCoverPink,
         divider = {
@@ -65,15 +75,14 @@ fun loginTabs(
                     text = {
                         Text(
                             text = tab.title,
-                            color = if (selectedScreen.value == index) Color.White  else CardCoverPink,
+                            color = if (pagerState.currentPage == index) Color.White  else CardCoverPink,
                         )
                     },
-                    selected = index == selectedTab,
+                    selected = index == pagerState.currentPage,
                     selectedContentColor = Color.White,
                     onClick = {
-                        setSelectedTab(index)
-                        selectedScreen.value = index
-                        //   onNavigate(tab)
+                     //   pagerState.currentPage = index
+                        onPageSelected(index)
                     }
                 )
             }
@@ -81,6 +90,7 @@ fun loginTabs(
     )
 }
 
+/*
 
 @Preview
 @Composable
@@ -106,4 +116,4 @@ fun tabPreview() {
             )
         }
     }
-}
+}*/

@@ -1,6 +1,11 @@
 package com.esi.sba.powersh.screens
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.esi.sba.powersh.MainDestinations
 import com.esi.sba.powersh.R
 import com.esi.sba.powersh.cartListProducts
 import com.esi.sba.powersh.model.CardItem
@@ -33,6 +39,7 @@ import com.esi.sba.powersh.ui.theme.CardCoverPink
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
 
+@OptIn(ExperimentalAnimationApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun cartScreen(
@@ -64,38 +71,53 @@ fun cartScreen(
     ) {
 
         if (
-            cartProduct.size == 0
+            cartProduct.size != 0
         ){
-            Spacer(modifier = Modifier.weight(1f))
-            Image(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(start = 32.dp, end = 32.dp),
-                painter = painterResource(id = R.drawable.ic_empty_cart),
-                contentDescription = "Add To Cart"
-            )
-            Text(
-                color = Color.DarkGray,
-                fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                textAlign = TextAlign.Center,
-                text = "Cart is empty",
-                modifier = Modifier
-                    .padding(top = 20.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-        }else {
             cartListProducts(
                 navController = navController,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 cartProduct = cartProduct
             ) {
                 cartProduct.removeAt(it)
-                Log.d("akramakramakram", " cartProduct.removeAt(it) $it")
+            }
+        }else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+
+
+        AnimatedVisibility(
+                visible = cartProduct.size == 0,
+                enter = fadeIn(initialAlpha = 0f, tween(200)),
+                exit = fadeOut(targetAlpha = 0f, tween(200)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+             Column() {
+                 Image(
+                     modifier = Modifier
+                         .align(Alignment.CenterHorizontally)
+                         .padding(start = 32.dp, end = 32.dp),
+                     painter = painterResource(id = R.drawable.ic_empty_cart),
+                     contentDescription = "Add To Cart"
+                 )
+                 Text(
+                     color = Color.DarkGray,
+                     fontStyle = FontStyle.Normal,
+                     fontWeight = FontWeight.Bold,
+                     fontSize = 18.sp,
+                     textAlign = TextAlign.Center,
+                     text = "Cart is empty",
+                     modifier = Modifier
+                         .padding(top = 20.dp)
+                         .align(Alignment.CenterHorizontally)
+                 )
+             }
+
 
             }
-        }
 
 
         Spacer(modifier = Modifier.weight(1f))
@@ -134,11 +156,11 @@ fun cartScreen(
            }
            Spacer(modifier = Modifier.weight(1f))
            Button(
-               enabled = false,
+               enabled = totalPrice.value > 0,
                shape = RoundedCornerShape(14.dp),
                colors = ButtonDefaults.buttonColors(
-                   backgroundColor = CardCoverPink,
-                   contentColor = CardCoverPink,
+                   backgroundColor =if (totalPrice.value > 0) PowerSHRed else CardCoverPink,
+                   contentColor = if (totalPrice.value > 0) Color.White else CardCoverPink,
                    disabledBackgroundColor = CardCoverPink,
                    disabledContentColor = CardCoverPink,
                ),
@@ -146,13 +168,13 @@ fun cartScreen(
                    .background(color = CardCoverPink, shape = RoundedCornerShape(14.dp))
                    .align(Alignment.CenterVertically),
                onClick = {
-
+                navController.navigate(MainDestinations.CHECKOUT_PAGE)
                }) {
                Text(
-                   text = "Empty Cart",
-                   color =Color.DarkGray,
+                   text =if (totalPrice.value > 0) "CHECKOUT" else "Empty Cart" ,
+                   color =if (totalPrice.value > 0) Color.White else Color.DarkGray ,
                    style = TextStyle(
-                       background = CardCoverPink,
+                       background = if (totalPrice.value > 0) PowerSHRed else CardCoverPink,
                    ),
                    textAlign = TextAlign.Center,
                    modifier = Modifier.padding(

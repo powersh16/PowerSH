@@ -2,7 +2,6 @@ package com.esi.sba.powersh.screens
 
 import android.util.Log
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -47,31 +46,36 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.esi.sba.powersh.MainDestinations
 import com.esi.sba.powersh.R
 import com.esi.sba.powersh.components.Indicators
 import com.esi.sba.powersh.components.LoginState
-import com.esi.sba.powersh.components.extensions.DessertCard
 import com.esi.sba.powersh.components.extensions.IndicatorState
-import com.esi.sba.powersh.components.indicator.OnboardingPage
-import com.esi.sba.powersh.components.indicator.Pager
-import com.esi.sba.powersh.components.indicator.PagerState
 import com.esi.sba.powersh.components.loginTabs
 import com.esi.sba.powersh.ui.theme.CardCoverPink
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 
+@ExperimentalPagerApi
 @Composable
 fun mainCard(
-             tabState: MutableState<Int>) {
+    navController : NavController,
+    pagerState: PagerState,
+    onPageSelected : (Int) -> Unit
+) {
+
         Column(
             modifier = Modifier
-                .padding(start = 0.dp, end = 0.dp)
+                .padding(start = 1.dp, end = 1.dp)
                 .clip(
-                    RoundedCornerShape(48.dp).copy(
+                    RoundedCornerShape(32.dp).copy(
                         topStart = ZeroCornerSize,
                         topEnd = ZeroCornerSize
                     )
@@ -84,9 +88,19 @@ fun mainCard(
 
 
         ) {
+            IconButton(onClick = {
+                navController.navigate(MainDestinations.MAIN_PAGE)
+            }) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                    )
+            }
+
             Image(
                 modifier = Modifier
-                    .padding(top = 8.dp, bottom = 2.dp)
+                    .padding(top = 6.dp, bottom = 4.dp)
                     .size(80.dp)
                     .align(CenterHorizontally)
                 ,
@@ -99,8 +113,11 @@ fun mainCard(
             loginTabs(
                 modifier = Modifier.align(CenterHorizontally),
                 screenState = LoginState(),
-                selectedScreen = tabState,
-            )
+            //    selectedScreen = tabState,
+                pagerState = pagerState
+            ){
+                onPageSelected(it)
+            }
 
 
 
@@ -182,7 +199,9 @@ fun LoginScreen(
             ClickableText(
                 modifier = Modifier
                     .padding(top = 48.dp, bottom = 8.dp)
-                    .align(CenterHorizontally),
+                    .align(CenterHorizontally)
+                    .padding(4.dp)
+                ,
                 text = AnnotatedString("Forget Password?"),
                 onClick = {
                     isForgetButtonPressed = true
@@ -719,6 +738,7 @@ fun forgetPasswordBottomSheet(bottomSheetScaffoldState: ModalBottomSheetState) {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun authentificationScreen(
+    navController : NavController,
     tabState : MutableState<Int>
 ){
 
@@ -726,19 +746,26 @@ fun authentificationScreen(
     val bottomSheetScaffoldState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     val pagerState = rememberPagerState(pageCount = 2)
+    val scope = rememberCoroutineScope()
 
-    var scope = rememberCoroutineScope()
     val dotSettings =
         IndicatorState.DotSettings(size = 2, radius = 7.6f, color = PowerSHRed)
     val state = remember { IndicatorState(scope, dotSettings) }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) {
       Column(modifier = Modifier.fillMaxSize()) {
           mainCard(
-              tabState  = tabState,
-          )
+              navController = navController,
+              pagerState = pagerState
+          ){
+              scope.launch {
+                  pagerState.animateScrollToPage(it, 0f, skipPages = false)
+
+              }
+          }
 
           HorizontalPager(
               state = pagerState,
@@ -762,21 +789,8 @@ fun authentificationScreen(
 
           }
 
-
-          Indicators(
-              state,
-              pagerState,
-              Modifier
-                  .fillMaxWidth()
-          )
-
-          tabState.value = if ( state.currentPosition == 0) 1 else 0
-
-
-
       }
         forgetPasswordBottomSheet(bottomSheetScaffoldState = bottomSheetScaffoldState)
-
 
     }
 
@@ -837,7 +851,10 @@ fun LoginPage1() {
     var tabState = remember {
         mutableStateOf(0)
     }
+    val navController = rememberNavController()
 
-    authentificationScreen(tabState = tabState)
+    authentificationScreen(
+        navController =navController,
+        tabState = tabState)
 
 }

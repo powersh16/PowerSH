@@ -30,10 +30,7 @@ object MainDestinations {
     const val CART_PAGE = "CART_page"
 
 
-
-    const val INFO_PAGE_ONE = "info_page_one"
-    const val INFO_PAGE_TWO = "info_page_two"
-    const val INFO_PAGE_THREE = "info_page_three"
+    const val CHECKOUT_PAGE = "checkout_page"
 
 
     const val ONBOARDING = "onboarding"
@@ -47,7 +44,7 @@ object MainDestinations {
 fun NavGraph(
     finishActivity: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
-    startDestination: String = MainDestinations.SPLASH_SCREE,
+    startDestination: String = MainDestinations.CHECKOUT_PAGE,
     cartProduct: SnapshotStateList<CardItem>,
 ) {
     NavHost(
@@ -161,29 +158,18 @@ fun NavGraph(
 
 
 
-            authentificationScreen(tabState = tabState)
+            authentificationScreen( navController = navController, tabState = tabState)
         }
 
-        composable(MainDestinations.INFO_PAGE_ONE) {
+
+        composable(MainDestinations.CHECKOUT_PAGE) {
             BackHandler {
-                finishActivity()
+                navController.navigate(MainDestinations.CART_PAGE)
             }
-            infoScreenOne(navController)
+            checkoutScreen(navController, cartProduct)
         }
 
-        composable(MainDestinations.INFO_PAGE_TWO) {
-            BackHandler {
-                navController.navigate(MainDestinations.INFO_PAGE_ONE)
-            }
-            infoScreenTwo(navController)
-        }
 
-        composable(MainDestinations.INFO_PAGE_THREE) {
-            BackHandler {
-                navController.navigate(MainDestinations.INFO_PAGE_TWO)
-            }
-            infoScreenThree(navController)
-        }
 
 
     }

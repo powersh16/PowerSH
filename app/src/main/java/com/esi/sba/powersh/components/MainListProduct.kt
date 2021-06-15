@@ -8,11 +8,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomSheetScaffoldState
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -102,17 +102,10 @@ fun productItem(
 
     Card(shape = RoundedCornerShape(8.dp),
         backgroundColor = Color.White,
+        elevation = 2.dp,
         modifier = Modifier
             .padding(8.dp)
-          /*  .clickable {
-                Log.d("productItemClick", "Clicked")
-                //   navController.navigate(MainDestinations.DETAIL_PAGE)
 
-                coroutineScope.launch {
-                    bottomSheetStat.bottomSheetState.expand()
-                }
-
-            }*/
     ) {
 
         Column(
@@ -120,11 +113,10 @@ fun productItem(
                 .padding(bottom = 16.dp)
                 .clickable {
                     Log.d("productItemClick", "Clicked2")
-                  //  navController.navigate(MainDestinations.DETAIL_PAGE)
+                    //  navController.navigate(MainDestinations.DETAIL_PAGE)
                     coroutineScope.launch {
                         bottomSheetStat.bottomSheetState.expand()
                     }
-
                     selectedProduct.value = product.id
                     onProductClicked(product.id)
 
@@ -132,13 +124,6 @@ fun productItem(
             ,
 
             ) {
-
-
-
-
-
-
-
 
 
             Box(modifier = Modifier.fillMaxWidth()
@@ -151,7 +136,6 @@ fun productItem(
                     contentDescription = "Shoes",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
-                        .padding(1.dp)
                         .fillMaxWidth()
                         .height(160.dp)
                         .align(Center)
@@ -170,28 +154,37 @@ fun productItem(
             }
 
 
+            Row() {
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = product.title,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    )
+                    Text(
+                        text = "${product.price} DA",
+                        color = PowerSHRed,
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    )
+                }
+
+                IconButton(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    onClick = {  }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info ,
+                        contentDescription = "More",
+                        tint = Color.LightGray
+                    )
+                }
+            }
 
 
 
-
-
-
-
-
-
-
-
-            Text(
-                text = product.title,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
-            )
-            Text(
-                text = product.price.toString(),
-                color = PowerSHRed,
-                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
-            )
         }
 
 

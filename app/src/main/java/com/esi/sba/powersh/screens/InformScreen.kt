@@ -122,7 +122,7 @@ fun infoScreenOne(navController: NavController) {
                 shape = CircleShape,
                 modifier= Modifier.background(color = PowerSHRed, shape = CircleShape),
                 onClick = {
-                    navController.navigate(MainDestinations.INFO_PAGE_TWO)
+               //     navController.navigate(MainDestinations.INFO_PAGE_TWO)
             }) {
                Text(
                    text = "Next",
@@ -243,7 +243,7 @@ fun infoScreenTwo(navController: NavController) {
                 shape = CircleShape,
                 modifier= Modifier.background(color = PowerSHRed, shape = CircleShape),
                 onClick = {
-                    navController.navigate(MainDestinations.INFO_PAGE_THREE)
+               //     navController.navigate(MainDestinations.INFO_PAGE_THREE)
 
                 }) {
                 Text(

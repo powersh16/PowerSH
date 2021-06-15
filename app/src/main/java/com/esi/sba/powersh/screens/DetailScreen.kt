@@ -38,6 +38,7 @@ import com.esi.sba.powersh.model.Product
 import com.esi.sba.powersh.ui.theme.CardCoverPink
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
+import com.esi.sba.powersh.ui.theme.YellowOnboarding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.gowtham.ratingbar.RatingBar
 import kotlinx.coroutines.launch
@@ -131,7 +132,7 @@ fun detailScreen(
     }
 
         if (selectedProduct.value == 0) {
-            imagesList = productList0
+            imagesList = allProductList
             product = Product(
                 id = 0,
                 title = "Basket",
@@ -190,7 +191,9 @@ fun detailScreen(
         exit = fadeOut(targetAlpha = 0F, animationSpec = tween(300))
    ){
 
-        Scaffold{
+        Scaffold(
+            backgroundColor = YellowOnboarding.copy(alpha = 0.05f)
+        ){
 
             val coroutineScope = rememberCoroutineScope()
 
@@ -198,12 +201,10 @@ fun detailScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = Color.White)
                         .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
                         .onSizeChanged {
                             widthImage.value = it.width.dp
                         }
-                        .background(Color(0xFFFCFDFF))
                     ,
                 ) {
 
@@ -253,22 +254,33 @@ fun detailScreen(
                         )
 
 
-                        Icon(imageVector = if (favourite.value) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+
+                        Icon(imageVector =if (favourite.value) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                             contentDescription = "Heart",
-                            tint = if (favourite.value) PowerSHRed else Color.LightGray,
+                          //  tint = if (favourite.value) PowerSHRed else Color.LightGray,
+                            tint = PowerSHRed.copy(alpha = 0.8f),
                             modifier = Modifier
-                                .align(Alignment.TopEnd)
                                 .padding(8.dp)
+                                .align(Alignment.TopEnd)
                                 .background(
                                     color = CardCoverPink.copy(alpha = 0.1f),
                                     shape = RoundedCornerShape(12.dp)
                                 )
                                 .padding(8.dp)
-                                .size(36.dp)
-                                .clickable {
-                                    favourite.value = !favourite.value
-                                }
+                                .clickable(
+                                    onClick = {
+                                        favourite.value = !favourite.value
+                                    },
+                                    indication = rememberRipple(
+                                        color = PowerSHRed
+                                    ),
+                                    interactionSource = remember { MutableInteractionSource() }
+                                )
+
+
                         )
+
+
 
                     }
 

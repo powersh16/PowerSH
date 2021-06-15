@@ -5,6 +5,30 @@ import com.esi.sba.powersh.R
 
 object DataProvider {
 
+
+
+    val stepList = mutableStateListOf<Step>(
+
+        Step(
+            title = "Payment",
+        ),
+        Step(
+            title = "Address",
+        ),
+        Step(
+            title = "Confirmation",
+        ),
+    )
+
+
+
+
+
+
+
+
+
+
     val productList = listOf(
         Product(
             id = 0,
@@ -133,3 +157,5 @@ object DataProvider {
     )
 
 }
+
+

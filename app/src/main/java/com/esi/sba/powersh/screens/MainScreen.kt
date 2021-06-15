@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,11 +16,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.esi.sba.powersh.components.*
+import com.esi.sba.powersh.components.extensions.IndicatorState
 import com.esi.sba.powersh.model.CardItem
 import com.esi.sba.powersh.model.DataProvider
-import com.esi.sba.powersh.ui.theme.CardCover
+import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
+import com.esi.sba.powersh.ui.theme.YellowOnboarding
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 
@@ -142,6 +145,7 @@ fun mainScreen(
 
 
 
+@ExperimentalPagerApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @OptIn(ExperimentalAnimationApi::class)
@@ -156,16 +160,13 @@ fun mainScreen(
 
 
     val coroutineScope = rememberCoroutineScope()
-
-
-
-   // isDetailScreenVisible.value = !bottomSheetStat.bottomSheetState.isCollapsed
-
+    val pagerState = rememberPagerState(pageCount = 4)
 
      Column(
          modifier = Modifier
              .fillMaxSize()
-             .background(color = CardCover)
+             .background(YellowOnboarding.copy(alpha = 0.05f))
+
          ,
      ) {
          RoundedSearchBar(
@@ -178,15 +179,58 @@ fun mainScreen(
              }
          )
 
-         TabsPanel(screenState = ScreenState())
-         listProducts(navController = navController ,
-             modifier = Modifier.align(CenterHorizontally),
-             bottomSheetStat = bottomSheetStat,
-             selectedProduct =selectedProduct,
-             onProductClicked ={
-                 restoreValues.value = true
+         TabsPanel(
+             pagerState = pagerState
+         ){
+             coroutineScope.launch {
+                 pagerState.scrollToPage(it, 0f)
              }
-             )
+         }
+
+         HorizontalPager(state = pagerState) { page ->
+
+             when(page){
+                 0 -> listProducts(navController = navController ,
+                             modifier = Modifier,
+                             bottomSheetStat = bottomSheetStat,
+                             selectedProduct =selectedProduct,
+                             onProductClicked ={
+                                 restoreValues.value = true
+                             }
+                         )
+
+                 1 ->  Column() {
+                     Text(text = "Second", color = Color.Green)
+                     listProducts(navController = navController ,
+                         modifier = Modifier,
+                         bottomSheetStat = bottomSheetStat,
+                         selectedProduct =selectedProduct,
+                         onProductClicked ={
+                             restoreValues.value = true
+                         }
+                     )
+                 }
+                 2 -> listProducts(navController = navController ,
+                     modifier = Modifier,
+                     bottomSheetStat = bottomSheetStat,
+                     selectedProduct =selectedProduct,
+                     onProductClicked ={
+                         restoreValues.value = true
+                     }
+                 )
+                 3 -> listProducts(navController = navController ,
+                     modifier = Modifier,
+                     bottomSheetStat = bottomSheetStat,
+                     selectedProduct =selectedProduct,
+                     onProductClicked ={
+                         restoreValues.value = true
+                     }
+                 )
+             }
+
+
+         }
+
 
      }
 

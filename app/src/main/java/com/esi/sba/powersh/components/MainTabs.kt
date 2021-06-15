@@ -14,9 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.esi.sba.powersh.screens.splashScreen
 import com.esi.sba.powersh.ui.theme.PowerSHRed
 import com.esi.sba.powersh.ui.theme.PowerSHTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 
 data class ScreenState(var state: Screen = Screen.TOUS) {
 
@@ -30,21 +33,24 @@ data class ScreenState(var state: Screen = Screen.TOUS) {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TabsPanel(
-    screenState: ScreenState,
-  //  onNavigate: (ScreenState.Screen) -> Unit,
+    pagerState: PagerState,
+    onTabSelected : (Int) -> Unit = {},
+    //  onNavigate: (ScreenState.Screen) -> Unit,
 ) {
-    val (selectedTab, setSelectedTab) = remember {
-        mutableStateOf(
-            ScreenState.Screen.values().indexOf(screenState.state)
-        )
-    }
+
 
     val tabs = ScreenState.Screen.values()
 
     TabRow(
-        selectedTabIndex = selectedTab,
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        },
         backgroundColor = Color.White,
         contentColor = PowerSHRed,
         divider = {
@@ -58,14 +64,13 @@ fun TabsPanel(
                     text = {
                         Text(
                             text = tab.title,
-                            color = if (selectedTab == index) PowerSHRed else   Color.Gray,
+                            color = if (pagerState.currentPage == index) PowerSHRed else   Color.Gray,
                         )
                            },
-                    selected = index == selectedTab,
+                    selected = index == pagerState.currentPage,
                     selectedContentColor = PowerSHRed,
                     onClick = {
-                        setSelectedTab(index)
-                     //   onNavigate(tab)
+                     onTabSelected(index)
                     }
                 )
             }
@@ -74,11 +79,13 @@ fun TabsPanel(
 }
 
 
+@OptIn(ExperimentalPagerApi::class)
 @Preview
 @Composable
 fun splashPreview() {
 
-    val navController = rememberNavController()
+    val pagerState = rememberPagerState(pageCount = 4)
+
     PowerSHTheme {
         Box(
             modifier = Modifier
@@ -88,8 +95,7 @@ fun splashPreview() {
 
 
             TabsPanel(
-                screenState = ScreenState(),
-                // onNavigate: (ScreenState.Screen) -> Unit,
+                pagerState = pagerState,
             )
         }
     }
