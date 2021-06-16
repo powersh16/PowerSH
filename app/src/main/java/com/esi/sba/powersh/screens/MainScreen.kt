@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -25,6 +26,9 @@ import com.esi.sba.powersh.ui.theme.YellowOnboarding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 
 
@@ -187,10 +191,39 @@ fun mainScreen(
              }
          }
 
-         HorizontalPager(state = pagerState) { page ->
 
-             when(page){
-                 0 -> listProducts(navController = navController ,
+         val swipeRefreshState = rememberSwipeRefreshState(false)
+
+         SwipeRefresh(
+             state = swipeRefreshState,
+             onRefresh = { /* todo */ },
+             indicator = { state, trigger ->
+                 SwipeRefreshIndicator(
+                     state = state,
+                     refreshTriggerDistance = trigger,
+                     scale = true,
+                     contentColor = PowerSHRed,
+                     backgroundColor = MaterialTheme.colors.primary,
+                     shape = CircleShape,
+                 )
+             }
+         ) {
+
+             HorizontalPager(state = pagerState) { page ->
+
+                 when(page){
+                     0 -> listProducts(navController = navController ,
+                         modifier = Modifier,
+                         bottomSheetStat = bottomSheetStat,
+                         selectedProduct =selectedProduct,
+                         onProductClicked ={
+                             restoreValues.value = true
+                         }
+                     )
+
+                     1 ->  Column() {
+                         Text(text = "Second", color = Color.Green)
+                         listProducts(navController = navController ,
                              modifier = Modifier,
                              bottomSheetStat = bottomSheetStat,
                              selectedProduct =selectedProduct,
@@ -198,10 +231,16 @@ fun mainScreen(
                                  restoreValues.value = true
                              }
                          )
-
-                 1 ->  Column() {
-                     Text(text = "Second", color = Color.Green)
-                     listProducts(navController = navController ,
+                     }
+                     2 -> listProducts(navController = navController ,
+                         modifier = Modifier,
+                         bottomSheetStat = bottomSheetStat,
+                         selectedProduct =selectedProduct,
+                         onProductClicked ={
+                             restoreValues.value = true
+                         }
+                     )
+                     3 -> listProducts(navController = navController ,
                          modifier = Modifier,
                          bottomSheetStat = bottomSheetStat,
                          selectedProduct =selectedProduct,
@@ -210,24 +249,9 @@ fun mainScreen(
                          }
                      )
                  }
-                 2 -> listProducts(navController = navController ,
-                     modifier = Modifier,
-                     bottomSheetStat = bottomSheetStat,
-                     selectedProduct =selectedProduct,
-                     onProductClicked ={
-                         restoreValues.value = true
-                     }
-                 )
-                 3 -> listProducts(navController = navController ,
-                     modifier = Modifier,
-                     bottomSheetStat = bottomSheetStat,
-                     selectedProduct =selectedProduct,
-                     onProductClicked ={
-                         restoreValues.value = true
-                     }
-                 )
-             }
 
+
+             }
 
          }
 
